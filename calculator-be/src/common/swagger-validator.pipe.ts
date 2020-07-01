@@ -24,7 +24,6 @@ export class SwaggerValidatorPipe implements PipeTransform {
           this.document.components &&
           this.document.components.schemas &&
           this.document.components.schemas[name];
-
         if (!schema) {
           this.validators.set(name, false);
         }

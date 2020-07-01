@@ -16,6 +16,7 @@ import {
   DEFAULT_VALUE,
   SEPARATOR,
   RESULT,
+  SYMBOLS_LIMIT,
 } from "./constants";
 
 const setOperand = (acc, symbol, set) => {
@@ -23,6 +24,10 @@ const setOperand = (acc, symbol, set) => {
     set(symbol);
 
     return symbol;
+  }
+
+  if (acc.length >= SYMBOLS_LIMIT) {
+    return acc;
   }
 
   if (symbol === SEPARATOR && acc.indexOf(SEPARATOR) > -1) {
@@ -33,6 +38,8 @@ const setOperand = (acc, symbol, set) => {
 
   return acc + symbol;
 };
+
+const defaults = (o) => (o === DEFAULT_VALUE ? DEFAULT_DISPLAY : o);
 
 function App() {
   const [operation, setOperation] = useState(undefined);
@@ -50,8 +57,17 @@ function App() {
 
   const onOperation = async (e) => {
     const next = e.target.value;
+
+    if (result && result !== DEFAULT_DISPLAY && left === DEFAULT_VALUE) {
+      setLeft(result);
+    }
+
     if (operation) {
-      const { result } = await calculate(operation, left, right);
+      const { result } = await calculate(
+        operation,
+        defaults(left),
+        defaults(right)
+      );
 
       setLeft(result);
       setResult(result);
@@ -66,9 +82,13 @@ function App() {
       return;
     }
 
-    const { result } = await calculate(operation, left, right);
+    const { result } = await calculate(
+      operation,
+      defaults(left),
+      defaults(right)
+    );
 
-    setLeft(result);
+    setLeft(DEFAULT_VALUE);
     setResult(result);
     setRight(DEFAULT_VALUE);
     setOperation(undefined);

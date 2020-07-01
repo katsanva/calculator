@@ -10,10 +10,17 @@ const OperationsMap = {
 export const calculate = (operation, left, right) =>
   fetch(`${process.env.REACT_APP_API_URL}/calculate`, {
     method: "POST",
-    body: JSON.stringify({ operation: OperationsMap[operation], left, right }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      operation: OperationsMap[operation],
+      left,
+      right,
+    }),
   }).then(async (res) => {
     if (!res.ok) {
-      throw new Error(await res.json());
+      throw new Error((await res.json()).message);
     }
 
     return res.json();
