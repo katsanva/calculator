@@ -1,5 +1,6 @@
 export const DEFAULT_VALUE = Symbol("DEFAULT_VALUE");
-export const DEFAULT_DISPLAY = "0";
+export const ZERO = "0";
+export const NAN_DISPLAY = "NaN";
 export const SEPARATOR = ".";
 export const DIVISION = "÷";
 export const MULTIPLICATION = "×";

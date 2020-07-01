@@ -12,11 +12,12 @@ import {
   MULTIPLICATION,
   MINUS,
   PLUS,
-  DEFAULT_DISPLAY,
+  ZERO,
   DEFAULT_VALUE,
   SEPARATOR,
   RESULT,
   SYMBOLS_LIMIT,
+  NAN_DISPLAY,
 } from "./constants";
 
 const setOperand = (acc, symbol, set) => {
@@ -24,6 +25,10 @@ const setOperand = (acc, symbol, set) => {
     set(symbol);
 
     return symbol;
+  }
+
+  if (acc === ZERO && symbol === ZERO) {
+    return acc;
   }
 
   if (acc.length >= SYMBOLS_LIMIT) {
@@ -39,26 +44,47 @@ const setOperand = (acc, symbol, set) => {
   return acc + symbol;
 };
 
-const defaults = (o) => (o === DEFAULT_VALUE ? DEFAULT_DISPLAY : o);
+const defaults = (operand) => {
+  switch (operand) {
+    case DEFAULT_VALUE: {
+      return ZERO;
+    }
+    case NAN_DISPLAY: {
+      return ZERO;
+    }
+    default: {
+      return operand;
+    }
+  }
+};
 
 function App() {
   const [operation, setOperation] = useState(undefined);
   const [left, setLeft] = useState(DEFAULT_VALUE);
   const [right, setRight] = useState(DEFAULT_VALUE);
-  const [result, setResult] = useState(DEFAULT_DISPLAY);
+  const [result, setResult] = useState(ZERO);
 
   const onInput = (e) => {
-    if (operation) {
-      return setResult(setOperand(right, e.target.value, setRight));
+    const val = e.target.value;
+
+    if (result === NAN_DISPLAY && !operation && left === DEFAULT_VALUE) {
+      setLeft(val);
+      setResult(val);
+
+      return;
     }
 
-    return setResult(setOperand(left, e.target.value, setLeft));
+    if (operation) {
+      return setResult(setOperand(right, val, setRight));
+    }
+
+    return setResult(setOperand(left, val, setLeft));
   };
 
   const onOperation = async (e) => {
     const next = e.target.value;
 
-    if (result && result !== DEFAULT_DISPLAY && left === DEFAULT_VALUE) {
+    if (result !== ZERO && result !== NAN_DISPLAY && left === DEFAULT_VALUE) {
       setLeft(result);
     }
 
@@ -88,15 +114,13 @@ function App() {
       defaults(right)
     );
 
-    setLeft(DEFAULT_VALUE);
+    setLeft(result);
     setResult(result);
-    setRight(DEFAULT_VALUE);
-    setOperation(undefined);
   };
 
   const onReset = () => {
     setLeft(DEFAULT_VALUE);
-    setResult(DEFAULT_DISPLAY);
+    setResult(ZERO);
     setRight(DEFAULT_VALUE);
     setOperation(undefined);
   };
@@ -257,9 +281,9 @@ function App() {
             variant="outline-secondary"
             onClick={onInput}
             block
-            value={"0"}
+            value={ZERO}
           >
-            0
+            {ZERO}
           </Button>
         </Col>
         <Col className={"mb-1"}>
