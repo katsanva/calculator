@@ -60,44 +60,48 @@ const defaults = (operand) => {
 
 function App() {
   const [operation, setOperation] = useState(undefined);
-  const [left, setLeft] = useState(DEFAULT_VALUE);
-  const [right, setRight] = useState(DEFAULT_VALUE);
+  const [leftOperand, setLeftOperand] = useState(DEFAULT_VALUE);
+  const [rightOperand, setRightOperand] = useState(DEFAULT_VALUE);
   const [result, setResult] = useState(ZERO);
 
   const onInput = (e) => {
-    const val = e.target.value;
+    const symbol = e.target.value;
 
-    if (result === NAN_DISPLAY && !operation && left === DEFAULT_VALUE) {
-      setLeft(val);
-      setResult(val);
+    if (result === NAN_DISPLAY && !operation && leftOperand === DEFAULT_VALUE) {
+      setLeftOperand(symbol);
+      setResult(symbol);
 
       return;
     }
 
     if (operation) {
-      return setResult(setOperand(right, val, setRight));
+      return setResult(setOperand(rightOperand, symbol, setRightOperand));
     }
 
-    return setResult(setOperand(left, val, setLeft));
+    return setResult(setOperand(leftOperand, symbol, setLeftOperand));
   };
 
   const onOperation = async (e) => {
     const next = e.target.value;
 
-    if (result !== ZERO && result !== NAN_DISPLAY && left === DEFAULT_VALUE) {
-      setLeft(result);
+    if (
+      result !== ZERO &&
+      result !== NAN_DISPLAY &&
+      leftOperand === DEFAULT_VALUE
+    ) {
+      setLeftOperand(result);
     }
 
     if (operation) {
       const { result } = await calculate(
         operation,
-        defaults(left),
-        defaults(right)
+        defaults(leftOperand),
+        defaults(rightOperand)
       );
 
-      setLeft(result);
+      setLeftOperand(result);
       setResult(result);
-      setRight(DEFAULT_VALUE);
+      setRightOperand(DEFAULT_VALUE);
     }
 
     setOperation(next);
@@ -110,18 +114,18 @@ function App() {
 
     const { result } = await calculate(
       operation,
-      defaults(left),
-      defaults(right)
+      defaults(leftOperand),
+      defaults(rightOperand)
     );
 
-    setLeft(result);
+    setLeftOperand(result);
     setResult(result);
   };
 
   const onReset = () => {
-    setLeft(DEFAULT_VALUE);
+    setLeftOperand(DEFAULT_VALUE);
     setResult(ZERO);
-    setRight(DEFAULT_VALUE);
+    setRightOperand(DEFAULT_VALUE);
     setOperation(undefined);
   };
 
