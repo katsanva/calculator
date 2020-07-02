@@ -7,6 +7,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
+import Badge from "react-bootstrap/Badge";
 import { calculate } from "./calculator.api";
 import {
   DIVISION,
@@ -141,6 +142,7 @@ function App() {
 
   return (
     <Container className="mx-auto" style={{ width: "500px" }}>
+      <Badge>CASIO</Badge>
       <Row>
         <Col className={"my-1"}>
           <Form.Control placeholder={result} disabled />
