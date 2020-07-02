@@ -4,7 +4,7 @@ import { Operations } from './operations.enum';
 
 @Injectable()
 export class CalculatorService {
-  calculate({ operation, left, right }: CalculationPayload) {
+  calculate({ operation, left, right }: CalculationPayload): string {
     switch (operation) {
       case Operations.Division: {
         return left.dividedBy(right).toString();

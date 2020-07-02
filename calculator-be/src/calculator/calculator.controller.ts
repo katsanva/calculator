@@ -3,7 +3,7 @@ import { CalculateBodyDto } from './dto/calculate.body.dto';
 import { CalculateResponseDto } from './dto/calculate.response.dto';
 import { CalculatorService } from './calculator.service';
 import { ApiTags, ApiOkResponse, ApiBody } from '@nestjs/swagger';
-import { OperandsToBigintPipe } from 'src/common/operands-to-bigint.pipe';
+import { OperandsToBigintPipe } from '../common/operands-to-bigint.pipe';
 import { CalculationPayload } from './dto/calculation-payload.dto';
 
 @Controller()
