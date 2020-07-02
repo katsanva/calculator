@@ -6,6 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert";
 import { calculate } from "./calculator.api";
 import {
   DIVISION,
@@ -63,6 +64,15 @@ function App() {
   const [leftOperand, setLeftOperand] = useState(DEFAULT_VALUE);
   const [rightOperand, setRightOperand] = useState(DEFAULT_VALUE);
   const [result, setResult] = useState(ZERO);
+  const [error, setError] = useState();
+
+  const handleCalculationError = (e) => {
+    setError(e.message);
+
+    setTimeout(() => setError(), 3000);
+
+    return { result: NAN_DISPLAY };
+  };
 
   const onInput = (e) => {
     const symbol = e.target.value;
@@ -97,7 +107,7 @@ function App() {
         operation,
         defaults(leftOperand),
         defaults(rightOperand)
-      );
+      ).catch(handleCalculationError);
 
       setLeftOperand(result);
       setResult(result);
@@ -116,7 +126,7 @@ function App() {
       operation,
       defaults(leftOperand),
       defaults(rightOperand)
-    );
+    ).catch(handleCalculationError);
 
     setLeftOperand(result);
     setResult(result);
@@ -309,6 +319,11 @@ function App() {
           <Button variant="secondary" block value={PLUS} onClick={onOperation}>
             {PLUS}
           </Button>
+        </Col>
+      </Row>
+      <Row style={{ display: error ? "block" : "none" }}>
+        <Col>
+          <Alert variant={"danger"}>{error}</Alert>
         </Col>
       </Row>
     </Container>
