@@ -13,8 +13,16 @@ const setOperand = (acc, symbol, set) => {
     return symbol;
   }
 
-  if (acc === ZERO && symbol === ZERO) {
-    return acc;
+  if (acc === ZERO) {
+    if (symbol === ZERO) {
+      return acc;
+    }
+
+    return symbol;
+  }
+
+  if (acc === NAN_DISPLAY) {
+    return symbol;
   }
 
   if (acc.length >= SYMBOLS_LIMIT) {
@@ -93,15 +101,20 @@ export const useCalculatorHookFactory = (_useState, _calculate) =>
       }
 
       if (operation) {
-        const { result } = await _calculate(
+        const { result: r } = await _calculate(
           operation,
           defaults(leftOperand),
           defaults(rightOperand)
         ).catch(handleCalculationError);
 
-        setLeftOperand(result);
-        setResult(result);
-        setRightOperand(DEFAULT_VALUE);
+        if (r === NAN_DISPLAY) {
+          onReset();
+          setResult(NAN_DISPLAY);
+        } else {
+          setLeftOperand(r);
+          setResult(r);
+          setRightOperand(DEFAULT_VALUE);
+        }
       }
 
       setOperation(next);
@@ -112,14 +125,21 @@ export const useCalculatorHookFactory = (_useState, _calculate) =>
         return;
       }
 
-      const { result } = await _calculate(
+      const { result: r } = await _calculate(
         operation,
         defaults(leftOperand),
         defaults(rightOperand)
       ).catch(handleCalculationError);
 
-      setLeftOperand(result);
-      setResult(result);
+      if (r === NAN_DISPLAY) {
+        onReset();
+        setResult(NAN_DISPLAY);
+
+        return;
+      }
+
+      setLeftOperand(r);
+      setResult(r);
     };
 
     const onReset = () => {
