@@ -21,17 +21,17 @@ describe('CalculatorService', () => {
   it('should perform sum', () => {
     expect(
       service.calculate({
-        operation: Operations.Plus,
+        operation: Operations.Sum,
         left: new BigNumber(1),
         right: new BigNumber(2),
       }),
     ).toBe('3');
   });
 
-  it('should perform subtract', () => {
+  it('should perform diff', () => {
     expect(
       service.calculate({
-        operation: Operations.Minus,
+        operation: Operations.Difference,
         left: new BigNumber(1),
         right: new BigNumber(2),
       }),

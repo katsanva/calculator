@@ -12,10 +12,10 @@ export class CalculatorService {
       case Operations.Multiplication: {
         return left.multipliedBy(right).toString();
       }
-      case Operations.Minus: {
+      case Operations.Difference: {
         return left.minus(right).toString();
       }
-      case Operations.Plus: {
+      case Operations.Sum: {
         return left.plus(right).toString();
       }
       default: {

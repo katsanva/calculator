@@ -149,7 +149,7 @@ describe('CalculatorController (e2e)', () => {
     });
 
     describe('happy path', () => {
-      it('should make simple division', () => {
+      it('should handle simple division', () => {
         return request(app.getHttpServer())
           .post(url)
           .send({
@@ -158,6 +158,83 @@ describe('CalculatorController (e2e)', () => {
             right: '3',
           })
           .expect(HttpStatus.OK, { result: '1' });
+      });
+
+      it('should handle 0/0', () => {
+        return request(app.getHttpServer())
+          .post(url)
+          .send({
+            operation: Operations.Division,
+            left: '0',
+            right: '0',
+          })
+          .expect(HttpStatus.OK, { result: 'NaN' });
+      });
+
+      it('should handle 1/0', () => {
+        return request(app.getHttpServer())
+          .post(url)
+          .send({
+            operation: Operations.Division,
+            left: '1',
+            right: '0',
+          })
+          .expect(HttpStatus.OK, { result: 'Infinity' });
+      });
+
+      it('should handle -1/0', () => {
+        return request(app.getHttpServer())
+          .post(url)
+          .send({
+            operation: Operations.Division,
+            left: '-1',
+            right: '0',
+          })
+          .expect(HttpStatus.OK, { result: '-Infinity' });
+      });
+
+      it('should handle division of non-integers', () => {
+        return request(app.getHttpServer())
+          .post(url)
+          .send({
+            operation: Operations.Division,
+            left: '2.5',
+            right: '0.5',
+          })
+          .expect(HttpStatus.OK, { result: '5' });
+      });
+
+      it('should handle division with floating point result', () => {
+        return request(app.getHttpServer())
+          .post(url)
+          .send({
+            operation: Operations.Division,
+            left: '1',
+            right: '5',
+          })
+          .expect(HttpStatus.OK, { result: '0.2' });
+      });
+
+      it('should handle Infinity division', () => {
+        return request(app.getHttpServer())
+          .post(url)
+          .send({
+            operation: Operations.Division,
+            left: 'Infinity',
+            right: '5',
+          })
+          .expect(HttpStatus.OK, { result: 'Infinity' });
+      });
+
+      it('should handle Infinity multiplication', () => {
+        return request(app.getHttpServer())
+          .post(url)
+          .send({
+            operation: Operations.Multiplication,
+            left: 'Infinity',
+            right: '-5',
+          })
+          .expect(HttpStatus.OK, { result: '-Infinity' });
       });
     });
   });
